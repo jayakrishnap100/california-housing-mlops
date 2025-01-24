@@ -25,18 +25,19 @@ except Exception as e:
     print("Please run training first: python -m src.train")
     raise
 
+
 @app.route('/predict', methods=['POST'])
 def predict():
     try:
         # Get features from JSON request
         features = request.json['features']
-        
+
         # Convert to DataFrame with feature names
         df = pd.DataFrame([features], columns=feature_names)
-        
+
         # Make prediction
         prediction = model.predict(df)
-        
+
         return jsonify({
             'status': 'success',
             'prediction': float(prediction[0]),
@@ -47,6 +48,7 @@ def predict():
             'status': 'error',
             'message': str(e)
         }), 400
+
 
 @app.route('/info', methods=['GET'])
 def info():
@@ -68,6 +70,7 @@ def info():
             'features': [8.3252, 41.0, 6.984127, 1.023810, 322.0, 2.555556, 37.88, -122.23]
         }
     })
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
