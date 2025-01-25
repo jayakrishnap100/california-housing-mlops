@@ -1,5 +1,5 @@
-from sklearn.ensemble import RandomForestRegressor
 from sklearn.base import BaseEstimator, RegressorMixin
+from sklearn.ensemble import RandomForestRegressor
 
 
 class HousePriceModel(BaseEstimator, RegressorMixin):

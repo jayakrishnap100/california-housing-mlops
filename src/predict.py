@@ -1,7 +1,8 @@
 import os
-from flask import Flask, request, jsonify
+
 import mlflow
 import pandas as pd
+from flask import Flask, request, jsonify
 from sklearn.datasets import fetch_california_housing
 
 app = Flask(__name__)
