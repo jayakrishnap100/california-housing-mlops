@@ -1,16 +1,17 @@
 import os
-import shutil
-import mlflow
-from sklearn.metrics import mean_squared_error, r2_score
-from .model import HousePriceModel
-from .data import load_data, preprocess_data
-import pandas as pd
-from mlflow.models.signature import infer_signature
 from datetime import datetime
+
+import mlflow
+from mlflow.models.signature import infer_signature
+from sklearn.metrics import mean_squared_error, r2_score
+
+from data import load_data, preprocess_data
+from model import HousePriceModel
 
 # Create model directory
 MODEL_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'models')
 os.makedirs(MODEL_DIR, exist_ok=True)
+
 
 def train_model(n_estimators=100, max_depth=10):
     mlflow.set_experiment("california_housing")
@@ -44,14 +45,14 @@ def train_model(n_estimators=100, max_depth=10):
 
         # Create model signature
         signature = infer_signature(X_train, model.predict(X_train))
-        
+
         # Create an input example
         input_example = X_train.iloc[:1]
 
         # Save versioned model
         model_path = os.path.join(model_version_dir, 'model.pkl')
         mlflow.sklearn.save_model(
-            model, 
+            model,
             model_path,
             signature=signature,
             input_example=input_example
@@ -62,10 +63,10 @@ def train_model(n_estimators=100, max_depth=10):
         if os.path.exists(latest_path):
             os.remove(latest_path)
         os.symlink(model_version_dir, latest_path)
-        
+
         # Also log model to MLflow
         mlflow.sklearn.log_model(
-            model, 
+            model,
             "model",
             signature=signature,
             input_example=input_example
@@ -75,6 +76,7 @@ def train_model(n_estimators=100, max_depth=10):
         print(f"Latest model symlink: {latest_path}")
 
         return model
+
 
 if __name__ == "__main__":
     train_model()
